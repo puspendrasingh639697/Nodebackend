@@ -1,10 +1,16 @@
 const express = require('express');
 const myDatabase = require('./Application/DB/db');
-const {register,
+const
+ {register,
    login,
    Listbox,
    InputBox,
-   coachTypesectionlist,biotankNamesectionlist,divistiosectionlist,zonesectionlist,submitQuestionSet} = require("./Application/Routes/All_In_One_Route");
+   coachTypesectionlist,
+   biotankNamesectionlist,
+   divistiosectionlist,
+   zonesectionlist,
+   submitQuestionSet
+  } = require("./Application/Routes/All_In_One_Route");
 const app = express();
 app.use(express.json());
 require("dotenv").config();

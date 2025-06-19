@@ -38,7 +38,8 @@ const login = async (req, res) => {
       return res.status(401).json({ message: "Incorrect password" });
 
     await LoginModel.create({ number, password });
-    return res.status(200).json({ message: "Login successful", user: registeredUser });
+    const { password: _, ...userWithoutPassword } = registeredUser.toObject();
+    return res.status(200).json({ message: "Login successful", user: userWithoutPassword });
   } catch (error) {
     console.error("Login Error:", error);
     return res.status(500).json({ message: "Internal Server Error", error: error.message });

@@ -27,16 +27,16 @@ const BoxListSchemaModel = mongoose.model("Listbox", boxListSchema);
 
 // =========================== Input Box Schema =============================
 const inputSchema = new mongoose.Schema({
-search: String,
-userId : String,
-coachNumber: { type: String, required: true },
-coachtype: String,
-biotankNumber: { type: String, required: true },
-biotankName: { type: String, required: true },
-placement: { type: String, required: true },
-creatAt: { type: Date, default: Date.now },
-devision: { type: String, required: true },
-zone: { type: String, required: true }
+  search: String,
+  userId : String,
+  coachNumber: { type: String, required: true },
+  coachtype: String,
+  biotankNumber: { type: String, required: true },
+  biotankName: { type: String, required: true },
+  placement: { type: String, required: true },
+  creatAt: { type: Date, default: Date.now },
+  devision: { type: String, required: true },
+  zone: { type: String, required: true }
 
 
 }, { timestamps: true });
