@@ -1,5 +1,7 @@
 const express = require('express');
-const myDatabase = require('./Application/DB/db');
+const connectDB = require('./Application/DB/db.js');
+require('dotenv').config(); // load .env variables
+
 const
  {register,
    login,
@@ -15,7 +17,7 @@ const app = express();
 app.use(express.json());
 require("dotenv").config();
 
-myDatabase();
+connectDB();
 
 app.post("/api/register",register);
 app.post("/api/login", login);
@@ -59,6 +61,8 @@ app.post("/api/quiz",submitQuestionSet);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server running on port ${PORT}`);
 });
+
+
