@@ -72,19 +72,25 @@ const zoneListModel = mongoose.model("ZoneList", zoneListSchema);
 
 // =================== 24 Question Answer Schema ===================
 const answerSchema = new mongoose.Schema({
+  key: { type: String, required: true },
+  value: { type: String, required: true },
   id: { type: Number, required: true },
   question: { type: String, required: true },
-  quiz: { type: String, enum: ['Yes', 'No'], required: true }
+  quiz: { type: String, enum: ['Yes', 'No'], required: true },
+   loginRef:{ type: mongoose.Schema.Types.ObjectId, ref: 'Login', required: true },
 });
 
+// QuestionSet Model
 const questionSetSchema = new mongoose.Schema({
   quiz: {
     type: [answerSchema],
     validate: [val => val.length === 24, 'Exactly 24 questions required']
   },
-  loginRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Login', required: true },
+  // loginRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Login', required: true },
   submittedAt: { type: Date, default: Date.now }
 });
+
+
 const QuestionSetModel = mongoose.model("QuestionSet", questionSetSchema);
 
 // =================== Export ===================

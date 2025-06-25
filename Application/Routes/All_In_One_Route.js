@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const { dataList } = require("../../utils/JsonData.js");
+
 
 const {
   LoginModel,
@@ -235,20 +237,80 @@ const zonesectionlist = async (req, res) => {
 
 // =================== Submit 24 QuestionSet API ===================
 
-const submitQuestionSet = async (req, res) => {
-  try {
-    const { quiz, loginRef } = req.body;
 
-    if (!Array.isArray(quiz) || quiz.length !== 24) {
-      return res.status(400).json({ status: false, message: 'Exactly 24 questions required' });
+
+const submitQuestionSet = async (req, res) => {
+  const dataList = [
+    { key: '1', value: 'Place the coach at maintenance workshop’s pit line, where forklift can be placed under the tank.' },
+    { key: '2', value: 'Mark all the tanks with their respective coach number and lavatory number.' },
+    { key: '3', value: 'Remove all the nut bolts used for fastening of safety ropes and safety ropes prokeye for IR-DRDE bio toilet retention tank.' },
+    { key: '4', value: 'Dismount hose clamp prokeye for securing of Rubber hose at Lavatory Pan.' },
+    { key: '5', value: 'Remove all the pneumatic pipes for flapper valve if any.' },
+    { key: '6', value: 'Open all the nuts and washer with the help of suitable spanner/wrench. At least one bolt should remain in the holes of each mounting bracket and tank to avoid accidental dropage of tank during placement and lifting of the tank.' },
+    { key: '7', value: 'Place the arms of fork lifter below tank and lift the tank slowly about half inch. Remove remaining bolts carefully.' },
+    { key: '8', value: 'Remove all the tank with the help of fork lifter for thorough cleaning, tank and mounting brackets should be inspected for any damage, leakages etc.' },
+    { key: '9', value: 'Complete tank evacuation and cleaning of whole tank.' },
+    { key: '10', value: 'Ball valve should be overhauled and PTFE seal of Ball valve should be renewed 100% during POH. (Only in "P" Trap)' },
+    { key: '11', value: 'Rubber connector should be renewed during POH.' },
+    { key: '12', value: 'Replacement of poly grass mat with proper securing arrangement.' },
+    { key: '13', value: 'If there is any damage or leakage in the tanks or non-confirming results of effluent discharges are being reported etc., these tanks should be drained out at designated place having proper drainage, cleaned properly and tank should be rectified for the deficiency noticed.' },
+    { key: '14', value: 'If there is no deficiency found, it should be stored after cleaning in the racks (3-tier stacks as suggested by CAMTECH / Gwalior) earmarked for bio toilets. Racks should be placed in cool, safe area and without sunlight.' },
+    { key: '15', value: 'Ingress of water, chemicals or any other foreign object to the tank should be prevented during storage of the bio toilet tanks.' },
+    { key: '16', value: 'Then the coach should be sent to all regular stages of POH attention.' },
+    { key: '17', value: 'After completion of POH of the coaches, tanks marked with respective coach number and lavatory number should be taken out from storage racks and restored in position.' },
+    { key: '18', value: 'Check the rubber hose used for joining of P-trap and Lavatory pan for any defects, remove all dirt, scaling and old sealant before fixing it again.' },
+    { key: '19', value: 'Reconnect pneumatic pipes for flapper valve if fitted with PLC version.' },
+    { key: '20', value: 'Nut, bolts and spring washers used for mounting bracket and securing of safety rope should be checked for wear, tear or corrosion etc. and should be replaced with same size material and grades if defective.' },
+    { key: '21', value: 'Check the safety rope before re-mounting for any defects.' },
+    { key: '22', value: 'Ensure all the nuts and bolts used for mounting and securing of safety rope are properly tightened before dispatch of the coach.' },
+    { key: '23', value: 'NDT of J Brackets/Positive mounting bracket.' },
+    { key: '24', value: 'Tanks should be refilled with the required level of bacterial inoculum before dispatch of the coach.' }
+  ];
+
+  try {
+    const { loginRef } = req.body;
+
+    if (!loginRef) {
+      return res.status(400).json({
+        status: false,
+        message: 'loginRef is required',
+      });
     }
 
-    const data = await QuestionSetModel.create({ quiz, loginRef });
-    res.status(201).json({ status: true, message: 'QuestionSet submitted', data });
-  } catch (err) {
-    res.status(500).json({ status: false, message: err.message });
+    if (!Array.isArray(dataList) || dataList.length !== 24) {
+      return res.status(400).json({
+        status: false,
+        message: 'DataList must contain exactly 24 questions',
+      });
+    }
+
+    const dataToInsert = dataList.map((item, index) => ({
+      ...item,
+      id: index + 1,
+      question: `Step ${index + 1}: ${item.value.slice(0, 50)}...?`, 
+      quiz: 'Yes',
+      loginRef,
+    }));
+
+    // Bulk insert
+    const savedData = await QuestionSetModel.insertMany(dataToInsert);
+
+    return res.status(201).json({
+      status: true,
+      message: 'Question set submitted successfully',
+      data: savedData,
+    });
+
+  } catch (error) {
+    console.error('Error submitting question set:', error.message);
+    return res.status(500).json({
+      status: false,
+      message: 'Internal Server Error: ' + error.message,
+    });
   }
 };
+
+
 
 module.exports = {
   register,
